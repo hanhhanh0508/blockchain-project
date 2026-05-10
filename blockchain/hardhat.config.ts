@@ -3,19 +3,18 @@ import { configVariable, defineConfig } from "hardhat/config";
 
 export default defineConfig({
   plugins: [hardhatToolboxMochaEthersPlugin],
+  paths: {
+    sources: "./contracts",
+  },
   solidity: {
-    profiles: {
-      default: {
+    compilers: [
+      {
         version: "0.8.28",
       },
-      production: {
+    ],
+    overrides: {
+      "contracts/TuneToken.sol": {
         version: "0.8.28",
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 200,
-          },
-        },
       },
     },
   },

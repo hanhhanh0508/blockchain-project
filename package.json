@@ -13,7 +13,9 @@
     "dev:backend": "npm run dev -w backend",
     "build": "npm run -ws build --if-present",
     "test": "npm run -ws test --if-present",
-    "lint": "npm run -ws lint --if-present"
+    "lint": "npm run -ws lint --if-present",
+    "deploy:blockchain": "npm run test:blockchain && npm run deploy:rpc -w blockchain",
+    "test:blockchain": "npm run test -w blockchain"
   },
   "keywords": [
     "monorepo",

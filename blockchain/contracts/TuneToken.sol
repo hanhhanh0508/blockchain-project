@@ -1,35 +1,30 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.28;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 /**
- * Token ERC20 dùng trong hệ thống TuneChain để tip nhạc sĩ
- * Kế thừa OpenZeppelin ERC20 + Ownable. Chỉ owner mới được mint thêm token.
+ * @title TuneToken (TCT)
+ * @dev ERC-20 token dùng làm đơn vị thanh toán trong hệ thống TuneChain.
+ * Chỉ owner (có thể là deployer hoặc multi-sig) mới có quyền mint token phục vụ testing.
  */
 contract TuneToken is ERC20, Ownable {
-    ///Tổng cung ban đầu: 1,000,000 TCT
-    uint256 public constant INITIAL_SUPPLY = 1_000_000 * 10 ** 18;
-
     /**
-     * Khởi tạo contract, mint toàn bộ INITIAL_SUPPLY cho deployer
-     * Deployer trở thành owner (Ownable)
+     * @dev Khởi tạo token với tên "TuneToken" và ký hiệu "TCT".
+     * Mint một lượng ban đầu cho owner để phân phối cho người dùng test.
+     * @param initialSupply Số lượng token mint ban đầu (có thể 1 triệu TCT với 18 decimals)
      */
-    constructor() ERC20("TuneToken", "TCT") Ownable(msg.sender) {
-        _mint(msg.sender, INITIAL_SUPPLY);
+    constructor(uint256 initialSupply) ERC20("TuneToken", "TCT") Ownable(msg.sender) {
+        _mint(msg.sender, initialSupply);
     }
 
     /**
-     * Mint thêm token — chỉ owner được gọi
-     * Dùng để nạp thêm token vào hệ thống khi cần
-     * Địa chỉ ví sẽ nhận token được mint ra
-     * số lượng token muốn tạo thêm, tính theo đơn vị wei (18 số 0). 
-     * Ví dụ muốn mint 100 TCT thì truyền vào 100 * 10^18
+     * @dev Mint thêm token (chỉ owner). Dùng để cấp token cho người dùng mới trong môi trường test.
+     * @param to Địa chỉ nhận token
+     * @param amount Số lượng token mint
      */
     function mint(address to, uint256 amount) external onlyOwner {
-        require(to != address(0), "TuneToken: mint to zero address");
-        require(amount > 0, "TuneToken: amount must be > 0");
         _mint(to, amount);
     }
 }
